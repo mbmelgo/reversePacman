@@ -4,9 +4,11 @@ import {FlowRouter} from 'meteor/kadira:flow-router';
 import {ReactiveDict} from 'meteor/reactive-dict';
 import {Tracker} from 'meteor/tracker';
 
-window.PIXI = require( '/public/phaser/build/custom/pixi' )
-window.p2 = require( '/public/phaser/build/custom/p2' )
-window.Phaser = require( '/public/phaser/build/custom/phaser-split' )
+window.PIXI = require( '/public/phaser/build/custom/pixi' );
+window.p2 = require( '/public/phaser/build/custom/p2' );
+window.Phaser = require( '/public/phaser/build/custom/phaser-split' );
+
+var game = new Phaser.Game(800,600,Phaser.AUTO, 'phaserBody');
 
 export default function () {
   return {
@@ -14,6 +16,7 @@ export default function () {
     FlowRouter,
     Collections,
     LocalState: new ReactiveDict(),
-    Tracker
+    Tracker,
+    game,
   };
 }
