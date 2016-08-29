@@ -8,7 +8,7 @@ window.PIXI = require( '/public/phaser/build/custom/pixi' );
 window.p2 = require( '/public/phaser/build/custom/p2' );
 window.Phaser = require( '/public/phaser/build/custom/phaser-split' );
 
-var game = new Phaser.Game(800,600,Phaser.AUTO, 'phaserBody');
+var game = new Phaser.Game(750,600,Phaser.AUTO, 'phaserBody');
 
 export default function () {
   return {

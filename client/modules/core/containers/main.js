@@ -15,9 +15,9 @@ export const composer = ({context}, onData) => {
     },
     create: function () {
       logo = this.add.sprite(0,0,'menu');
-      tm = this.add.button(550,160,'tm', this.cheatEngine, this);
-      playButton = this.add.button(275,290,'playButton', this.startGame, this);
-      highscore = this.add.button(275,350,'highscore', this.showHighscore, this);
+      tm = this.add.button(520,160,'tm', this.cheatEngine, this);
+      playButton = this.add.button(245,290,'playButton', this.startGame, this);
+      highscore = this.add.button(245,350,'highscore', this.showHighscore, this);
     },
     startGame: function () {
       console.log("Game Started");
@@ -62,12 +62,13 @@ export const composer = ({context}, onData) => {
            this.map = this.add.tilemap('map');
            this.map.addTilesetImage('pacman-tiles', 'tiles');
            this.layer = this.map.createLayer('Pacman');
+           this.layer.resizeWorld();
            this.dots = this.add.physicsGroup();
            this.map.createFromTiles(11, this.safetile, 'dot', this.layer, this.dots);
            this.dots.setAll('x', 8, false, false, 1);
            this.dots.setAll('y', 8, false, false, 1);
            this.map.setCollisionByExclusion([this.safetile], true, this.layer);
-           this.ghost = this.add.sprite((12 * 30) + 15, (13 * 30) + 15, 'ghost', 0);
+           this.ghost = this.add.sprite((12 * 30) + 15, (16 * 30) + 15, 'ghost', 0);
            this.ghost.anchor.set(0.5);
            this.ghost.animations.add('munch', [0, 1, 2, 1], 20, true);
            this.physics.arcade.enable(this.ghost);
