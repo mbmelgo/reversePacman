@@ -55,7 +55,7 @@ export const composer = ({context}, onData) => {
        },
        preload: function () {
            this.load.image('dot', '/assets/gameSprites/dot.png');
-           this.load.image('tiles', '/assets/gameSprites/tiles.png');this.load.spritesheet('ghost', '/assets/gameSprites/pacman.png', 30, 30);
+           this.load.image('tiles', '/assets/gameSprites/tiles.png');this.load.spritesheet('ghost', '/assets/gameSprites/ghost.png', 30, 30);
            this.load.tilemap('map', '/assets/gameSprites/map.json', null, Phaser.Tilemap.TILED_JSON);
        },
        create: function () {
