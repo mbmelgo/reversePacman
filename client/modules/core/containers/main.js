@@ -47,6 +47,8 @@ export const composer = ({context}, onData) => {
        this.opposites = [ Phaser.NONE, Phaser.RIGHT, Phaser.LEFT, Phaser.DOWN, Phaser.UP ];
        this.current = Phaser.NONE;
        this.turning = Phaser.NONE;
+       this.timer = null;
+       this.text = null;
    };
 
    Game.prototype = {
@@ -76,6 +78,17 @@ export const composer = ({context}, onData) => {
            this.cursors = this.input.keyboard.createCursorKeys();
            this.ghost.play('munch');
            this.move(Phaser.LEFT);
+           this.timer = this.time.events.loop(Phaser.Timer.SECOND * 120 , this.gameOver, this);
+           this.text = game.add.text(104, 50,"TIMER ");
+           this.text.anchor.set(0.5);
+           this.text.align = 'center';
+           this.text.font = 'Pixeled';
+           this.text.fontSize = 15;
+           this.text.fontWeight = 'bold';
+           this.text.stroke = '#000000';
+           this.text.strokeThickness = 6;
+           this.text.fill = '#f3c70a';
+
        },
        checkKeys: function () {
            if (this.cursors.left.isDown && this.current !== Phaser.LEFT){
@@ -141,6 +154,20 @@ export const composer = ({context}, onData) => {
            if (this.dots.total === 0){
                this.dots.callAll('revive');
            }
+       },
+       gameOver: function() {
+         this.time.events.removeAll();
+         console.log("Game Over");
+         this.state.start('Menu');
+       },
+       render: function() {
+         var seconds = Math.round((this.time.events.duration / 1000) % 60) ;
+         var minutes = Math.round(((this.time.events.duration / (1000*60)) % 60));
+         if(seconds<10){
+           this.text.setText("TIMER "+minutes+":0"+seconds);
+         } else {
+           this.text.setText("TIMER "+minutes+":"+seconds);
+         }
        },
        update: function () {
            this.physics.arcade.collide(this.ghost, this.layer);
