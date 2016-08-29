@@ -36,7 +36,7 @@ export const composer = ({context}, onData) => {
   var Game = function (game) {
        this.map = null;
        this.layer = null;
-       this.pacman = null;
+       this.ghost = null;
        this.safetile = 11;
        this.gridsize = 30;
        this.speed = 150;
@@ -55,8 +55,7 @@ export const composer = ({context}, onData) => {
        },
        preload: function () {
            this.load.image('dot', '/assets/gameSprites/dot.png');
-           this.load.image('tiles', '/assets/gameSprites/tiles.png');
-           this.load.spritesheet('pacman', '/assets/gameSprites/pacman.png', 30, 30);
+           this.load.image('tiles', '/assets/gameSprites/tiles.png');this.load.spritesheet('ghost', '/assets/gameSprites/pacman.png', 30, 30);
            this.load.tilemap('map', '/assets/gameSprites/map.json', null, Phaser.Tilemap.TILED_JSON);
        },
        create: function () {
@@ -68,13 +67,13 @@ export const composer = ({context}, onData) => {
            this.dots.setAll('x', 8, false, false, 1);
            this.dots.setAll('y', 8, false, false, 1);
            this.map.setCollisionByExclusion([this.safetile], true, this.layer);
-           this.pacman = this.add.sprite((11 * 30) + 15, (8 * 30) + 15, 'pacman', 0);
-           this.pacman.anchor.set(0.5);
-           this.pacman.animations.add('munch', [0, 1, 2, 1], 20, true);
-           this.physics.arcade.enable(this.pacman);
-           this.pacman.body.setSize(30, 30, 0, 0);
+           this.ghost = this.add.sprite((12 * 30) + 15, (13 * 30) + 15, 'ghost', 0);
+           this.ghost.anchor.set(0.5);
+           this.ghost.animations.add('munch', [0, 1, 2, 1], 20, true);
+           this.physics.arcade.enable(this.ghost);
+           this.ghost.body.setSize(30, 30, 0, 0);
            this.cursors = this.input.keyboard.createCursorKeys();
-           this.pacman.play('munch');
+           this.ghost.play('munch');
            this.move(Phaser.LEFT);
        },
        checkKeys: function () {
@@ -103,51 +102,50 @@ export const composer = ({context}, onData) => {
            }
        },
        turn: function () {
-           var cx = Math.floor(this.pacman.x);
-           var cy = Math.floor(this.pacman.y);
+           var cx = Math.floor(this.ghost.x);
+           var cy = Math.floor(this.ghost.y);
            if (!this.math.fuzzyEqual(cx, this.turnPoint.x, this.threshold) || !this.math.fuzzyEqual(cy, this.turnPoint.y, this.threshold)){
                return false;
            }
-           this.pacman.x = this.turnPoint.x;
-           this.pacman.y = this.turnPoint.y;
-           this.pacman.body.reset(this.turnPoint.x, this.turnPoint.y);
+           this.ghost.x = this.turnPoint.x;
+           this.ghost.y = this.turnPoint.y;
+           this.ghost.body.reset(this.turnPoint.x, this.turnPoint.y);
            this.move(this.turning);
            this.turning = Phaser.NONE;
            return true;
        },
-
        move: function (direction) {
            var speed = this.speed;
            if (direction === Phaser.LEFT || direction === Phaser.UP){
                speed = -speed;
            }
            if (direction === Phaser.LEFT || direction === Phaser.RIGHT){
-               this.pacman.body.velocity.x = speed;
+               this.ghost.body.velocity.x = speed;
            } else{
-               this.pacman.body.velocity.y = speed;
+               this.ghost.body.velocity.y = speed;
            }
-           this.pacman.scale.x = 1;
-           this.pacman.angle = 0;
+           this.ghost.scale.x = 1;
+           this.ghost.angle = 0;
            if (direction === Phaser.LEFT){
-               this.pacman.scale.x = -1;
+               this.ghost.scale.x = -1;
            } else if (direction === Phaser.UP){
-               this.pacman.angle = 270;
+               this.ghost.angle = 270;
            } else if (direction === Phaser.DOWN){
-               this.pacman.angle = 90;
+               this.ghost.angle = 90;
            }
            this.current = direction;
        },
-       eatDot: function (pacman, dot) {
+       eatDot: function (ghost, dot) {
            dot.kill();
            if (this.dots.total === 0){
                this.dots.callAll('revive');
            }
        },
        update: function () {
-           this.physics.arcade.collide(this.pacman, this.layer);
-           this.physics.arcade.overlap(this.pacman, this.dots, this.eatDot, null, this);
-           this.marker.x = this.math.snapToFloor(Math.floor(this.pacman.x), this.gridsize) / this.gridsize;
-           this.marker.y = this.math.snapToFloor(Math.floor(this.pacman.y), this.gridsize) / this.gridsize;
+           this.physics.arcade.collide(this.ghost, this.layer);
+          //  this.physics.arcade.overlap(this.ghost, this.dots, this.eatDot, null, this);
+           this.marker.x = this.math.snapToFloor(Math.floor(this.ghost.x), this.gridsize) / this.gridsize;
+           this.marker.y = this.math.snapToFloor(Math.floor(this.ghost.y), this.gridsize) / this.gridsize;
            this.directions[1] = this.map.getTileLeft(this.layer.index, this.marker.x, this.marker.y);
            this.directions[2] = this.map.getTileRight(this.layer.index, this.marker.x, this.marker.y);
            this.directions[3] = this.map.getTileAbove(this.layer.index, this.marker.x, this.marker.y);
